@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English to Kannada Translator</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Body Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header Styling */
+        h2 {
+            font-size: 36px;
+            color: #000000;
+            margin-bottom: 20px;
+        }
+
+        /* Input and Button Styling */
+        input, button {
+            font-size: 16px;
+            padding: 12px;
+            margin: 10px;
+            border: 1px solid #333333;
+            border-radius: 8px;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            max-width: 90%;
+            background-color: #f5f5f5;
+            color: #333333;
+        }
+
+        button {
+            background-color: #333333;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #000000;
+        }
+
+        /* Result Section Styling */
+        #result {
+            margin-top: 30px;
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #result h3 {
+            font-size: 24px;
+            color: #000000;
+        }
+
+        /* Save Section Styling */
+        h3 {
+            font-size: 22px;
+            color: #000000;
+            margin-top: 40px;
+        }
+
+        label {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #333333;
+        }
+
+        /* Audio and Image Previews */
+        #imageResult {
+            max-width: 250px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        audio {
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            input[type="text"] {
+                width: 80%;
+            }
+
+            #result {
+                width: 90%;
+                margin-top: 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h2>English to Kannada Translator</h2>
+
+    <input type="text" id="english" placeholder="Enter English word">
+    <button id="getTranslation">Get Translation</button>
+
+    <div id="result" style="display:none;">
+        <h3>Translation Details:</h3>
+        <p><strong>English:</strong> <span id="englishResult"></span></p>
+        <p><strong>Kannada:</strong> <span id="kannadaResult"></span></p>
+        <img id="imageResult" src="" alt="Image">
+        <audio id="audioResult" controls></audio>
+    </div>
+
+    <h3>Save Translation Data</h3>
+    <input type="text" id="englishWord" placeholder="Enter English word">
+    <input type="text" id="kannadaWord" placeholder="Enter Kannada translation">
+    <br>
+    <label>Upload Image:</label>
+    <input type="file" id="image"><br>
+    <label>Record Voice:</label>
+    <button id="record">🎤 Start Recording</button>
+    <button id="stop" disabled>⏹ Stop Recording</button>
+    <br>
+
+    <audio id="audioPreview" controls></audio>
+
+    <button id="save">Save</button>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        // Record Voice (No changes)
+        document.getElementById("record").addEventListener("click", async () => { 
+            // ... (Your existing recording code)
+        });
+
+        document.getElementById("stop").addEventListener("click", async () => {
+            // ... (Your existing stop recording code)
+        });
+
+        // Save Data to Backend (No changes)
+        document.getElementById("save").addEventListener("click", async () => {
+            // ... (Your existing save data code)
+        });
+
+        // Fetch Translation Data (Updated!)
+        document.getElementById("getTranslation").addEventListener("click", async () => {
+            let englishWord = document.getElementById("english").value;
+
+            if (englishWord.trim() === "") {
+                alert("Please enter an English word.");
+                return;
+            }
+
+            let response = await fetch(`/get_translation?english=${englishWord}`);
+            let result = await response.json();
+
+            if (result.error) {
+                alert(result.error);
+                return;
+            }
+
+            document.getElementById("englishResult").textContent = englishWord;
+            document.getElementById("kannadaResult").textContent = result.kannada;
+
+            // Set the image and audio file paths (No changes needed here)
+            document.getElementById("imageResult").src = result.image_file;
+            document.getElementById("audioResult").src = result.audio_file;
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+
+</body>
+</html>
